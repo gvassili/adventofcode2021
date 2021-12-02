@@ -3,12 +3,14 @@ package calendar
 import (
 	"fmt"
 	"github.com/gvassili/adventofcode2021/calendar/day01"
+	"github.com/gvassili/adventofcode2021/calendar/day02"
 	"io"
 	"sort"
 )
 
 var challenges = map[int]func() Challenge{
-	1:  func() Challenge { return new(day01.Challenge) },
+	1: func() Challenge { return new(day01.Challenge) },
+	2: func() Challenge { return new(day02.Challenge) },
 }
 
 func Load(day int) (Challenge, error) {

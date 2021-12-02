@@ -7,10 +7,10 @@ import (
 )
 
 type Challenge struct {
-	input    []int
+	input []int
 }
 
-func (d *Challenge) Day() int {
+func (c *Challenge) Day() int {
 	return 1
 }
 
@@ -27,26 +27,26 @@ func (c *Challenge) Prepare(r io.Reader) error {
 	return scanner.Err()
 }
 
-func (d *Challenge) Part1() (string, error) {
+func (c *Challenge) Part1() (string, error) {
 	count := 0
-	for i, n := range d.input {
-		if i > 0 && n > d.input[i - 1] {
+	for i, n := range c.input {
+		if i > 0 && n > c.input[i-1] {
 			count++
 		}
 	}
 	return strconv.Itoa(count), nil
 }
 
-func (d *Challenge) Part2() (string, error) {
+func (c *Challenge) Part2() (string, error) {
 	count, slidingSum, prevSlidingSum := 0, 0, 0
-	for i, n := range d.input {
-	    slidingSum += n
-	    if i > 2 {
-	    	slidingSum -= d.input[i - 3]
-	    	if slidingSum > prevSlidingSum {
-	    		count++
-	    	}
-	    }
+	for i, n := range c.input {
+		slidingSum += n
+		if i > 2 {
+			slidingSum -= c.input[i-3]
+			if slidingSum > prevSlidingSum {
+				count++
+			}
+		}
 		prevSlidingSum = slidingSum
 	}
 	return strconv.Itoa(count), nil
