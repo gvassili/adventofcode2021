@@ -38,16 +38,11 @@ func (c *Challenge) Part1() (string, error) {
 }
 
 func (c *Challenge) Part2() (string, error) {
-	count, slidingSum, prevSlidingSum := 0, 0, 0
+	count := 0
 	for i, n := range c.input {
-		slidingSum += n
-		if i > 2 {
-			slidingSum -= c.input[i-3]
-			if slidingSum > prevSlidingSum {
-				count++
-			}
+		if i > 2 && c.input[i-3] < n {
+			count++
 		}
-		prevSlidingSum = slidingSum
 	}
 	return strconv.Itoa(count), nil
 }
