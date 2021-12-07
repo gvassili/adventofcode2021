@@ -110,11 +110,6 @@ func (c *Challenge) Part1() (string, error) {
 
 	for _, a := range c.answers {
 		idx := sort.Search(len(cells), func(i int) bool { return cells[i].value >= a })
-		for i := idx - 1; i >= 0 && cells[i].value == a; i-- {
-			if checkCell(cells[i]) {
-				return strconv.Itoa(boards[cells[i].idx/boardSize].sum * a), nil
-			}
-		}
 		for i := idx; i < len(cells) && cells[i].value == a; i++ {
 			if checkCell(cells[i]) {
 				return strconv.Itoa(boards[cells[i].idx/boardSize].sum * a), nil
@@ -151,11 +146,6 @@ func (c *Challenge) Part2() (string, error) {
 
 	for _, a := range c.answers {
 		idx := sort.Search(len(cells), func(i int) bool { return cells[i].value >= a })
-		for i := idx - 1; i >= 0 && cells[i].value == a; i-- {
-			if checkCell(cells[i]) {
-				return strconv.Itoa(boards[cells[i].idx/boardSize].sum * a), nil
-			}
-		}
 		for i := idx; i < len(cells) && cells[i].value == a; i++ {
 			if checkCell(cells[i]) {
 				return strconv.Itoa(boards[cells[i].idx/boardSize].sum * a), nil
