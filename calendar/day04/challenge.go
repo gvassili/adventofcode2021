@@ -135,30 +135,29 @@ func (c *Challenge) Part2() (string, error) {
 			idx:   i,
 		}
 	}
+
 	sort.Sort(cells)
-	checkCell := func(c cell) {
+	checkCell := func(c cell) bool {
 		x, y, b := c.idx%boardWith, (c.idx/boardHeight)%boardHeight, c.idx/boardSize
 		cellRowMask, cellColMask := rowMask<<(y*boardWith), colMask<<x
 		boards[b].result |= 1 << x << (y * boardWith)
 		boards[b].sum -= c.value
-
-		if boards[b].result&cellRowMask == cellRowMask || boards[b].result&cellColMask == cellColMask && !boards[b].done {
+		if !boards[b].done && (boards[b].result&cellRowMask == cellRowMask || boards[b].result&cellColMask == cellColMask) {
 			boards[b].done = true
 			boardDone++
 		}
+		return boardDone == len(boards)
 	}
 
 	for _, a := range c.answers {
 		idx := sort.Search(len(cells), func(i int) bool { return cells[i].value >= a })
 		for i := idx - 1; i >= 0 && cells[i].value == a; i-- {
-			checkCell(cells[i])
-			if boardDone == len(boards) {
+			if checkCell(cells[i]) {
 				return strconv.Itoa(boards[cells[i].idx/boardSize].sum * a), nil
 			}
 		}
 		for i := idx; i < len(cells) && cells[i].value == a; i++ {
-			checkCell(cells[i])
-			if boardDone == len(boards) {
+			if checkCell(cells[i]) {
 				return strconv.Itoa(boards[cells[i].idx/boardSize].sum * a), nil
 			}
 		}
