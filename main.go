@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/gvassili/adventofcode2021/calendar"
 	"github.com/olekukonko/tablewriter"
+	"io"
 	"os"
 	"strconv"
 	"time"
@@ -26,8 +28,9 @@ func runChallenge(challenge calendar.Challenge) []result {
 		defer file.Close()
 		r = file
 	}
+	b, _ := io.ReadAll(r)
 	startTs := time.Now()
-	if err := challenge.Prepare(r); err != nil {
+	if err := challenge.Prepare(bytes.NewReader(b)); err != nil {
 		return []result{{"prepare", "", err, time.Now().Sub(startTs)}}
 	}
 	prepareTs := time.Now()
