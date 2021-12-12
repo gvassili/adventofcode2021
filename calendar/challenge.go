@@ -14,19 +14,27 @@ import (
 	"sort"
 )
 
-var challenges = map[int]func() Challenge{
-	1: func() Challenge { return new(day01.Challenge) },
-	2: func() Challenge { return new(day02.Challenge) },
-	3: func() Challenge { return new(day03.Challenge) },
-	4: func() Challenge { return new(day04.Challenge) },
-	5: func() Challenge { return new(day05.Challenge) },
-	6: func() Challenge { return new(day06.Challenge) },
-	7: func() Challenge { return new(day07.Challenge) },
-	8: func() Challenge { return new(day08.Challenge) },
+var challengeList = []func() Challenge{
+	func() Challenge { return new(day01.Challenge) },
+	func() Challenge { return new(day02.Challenge) },
+	func() Challenge { return new(day03.Challenge) },
+	func() Challenge { return new(day04.Challenge) },
+	func() Challenge { return new(day05.Challenge) },
+	func() Challenge { return new(day06.Challenge) },
+	func() Challenge { return new(day07.Challenge) },
+	func() Challenge { return new(day08.Challenge) },
 }
 
+var challengeMap = func() map[int]func() Challenge {
+	m := make(map[int]func() Challenge, len(challengeList))
+	for _, c := range challengeList {
+		m[c().Day()] = c
+	}
+	return m
+}()
+
 func Load(day int) (Challenge, error) {
-	loader, ok := challenges[day]
+	loader, ok := challengeMap[day]
 	if !ok {
 		return nil, fmt.Errorf("could not find challenge %d", day)
 	}
@@ -41,14 +49,14 @@ type Challenge interface {
 }
 
 func LoadAllChallenges() []Challenge {
-	challengeNames := make([]int, 0, len(challenges))
-	for name := range challenges {
+	challengeNames := make([]int, 0, len(challengeMap))
+	for name := range challengeMap {
 		challengeNames = append(challengeNames, name)
 	}
 	sort.Ints(challengeNames)
-	result := make([]Challenge, 0, len(challenges))
+	result := make([]Challenge, 0, len(challengeMap))
 	for _, day := range challengeNames {
-		result = append(result, challenges[day]())
+		result = append(result, challengeMap[day]())
 	}
 	return result
 }
