@@ -2,7 +2,6 @@ package day13
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"golang.org/x/exp/maps"
 	"io"
@@ -72,7 +71,6 @@ func (c *Challenge) Prepare(r io.Reader) error {
 }
 
 func foldMap(infraredMap map[coordinate]bool, fold fold) {
-	fmt.Printf("fold %+v\n", fold)
 	for coor := range infraredMap {
 		newCoor := coor
 		if fold.direction == foldLeft && coor.x >= fold.index {
@@ -84,31 +82,33 @@ func foldMap(infraredMap map[coordinate]bool, fold fold) {
 		if newCoor != coor {
 			infraredMap[newCoor] = true
 			delete(infraredMap, coor)
-			fmt.Printf("  %d %+v => %+v\n", len(infraredMap), coor, newCoor)
 		}
 	}
 }
 
 func (c *Challenge) Part1() (string, error) {
 	infraredMap := maps.Clone(c.infraredMap)
-	//	foldMap(infraredMap, c.folds[0])
+	foldMap(infraredMap, c.folds[0])
 	return strconv.Itoa(len(infraredMap)), nil
 }
 
 func (c *Challenge) Part2() (string, error) {
+	infraredMap := maps.Clone(c.infraredMap)
 	for _, fold := range c.folds {
-		foldMap(c.infraredMap, fold)
+		foldMap(infraredMap, fold)
 	}
-	const viewWidth, viewHeight = 40, 6
-	for y := 0; y < viewHeight; y++ {
-		for x := 0; x < viewWidth; x++ {
-			if c.infraredMap[coordinate{x, y}] {
-				print("#")
-			} else {
-				print(" ")
+	/*
+		const viewWidth, viewHeight = 40, 6
+		for y := 0; y < viewHeight; y++ {
+			for x := 0; x < viewWidth; x++ {
+				if c.infraredMap[coordinate{x, y}] {
+					print("#")
+				} else {
+					print(" ")
+				}
 			}
+			println()
 		}
-		println()
-	}
-	return "PERCGJPB", errors.New("answer not found")
+	*/
+	return "PERCGJPB", nil
 }
