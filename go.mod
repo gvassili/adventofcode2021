@@ -1,6 +1,6 @@
 module github.com/gvassili/adventofcode2021
 
-go 1.17
+go 1.18
 
 require (
 	github.com/olekukonko/tablewriter v0.0.5
