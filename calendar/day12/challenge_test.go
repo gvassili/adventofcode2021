@@ -8,13 +8,16 @@ import (
 	"testing"
 )
 
-const input = `start-A
-start-b
-A-c
-A-b
-b-d
-A-end
-b-end
+const input = `dc-end
+HN-start
+start-kj
+dc-start
+dc-HN
+LN-dc
+HN-end
+kj-sa
+kj-HN
+kj-dc
 `
 
 var fullInput = func() []byte {
@@ -33,6 +36,9 @@ func TestChallenge_Prepare(t *testing.T) {
 	var c Challenge
 	err := c.Prepare(bytes.NewReader([]byte(input)))
 	assert.NoError(t, err)
+	assert.Equal(t, 3, c.smallNodeCount)
+	assert.Equal(t, "start", c.startNode.name)
+	assert.Equal(t, startNodeType, c.startNode.nodeFlag)
 }
 
 func BenchmarkChallenge_Prepare(b *testing.B) {
@@ -49,7 +55,7 @@ func TestChallenge_Part1(t *testing.T) {
 	assert.NoError(t, err)
 	r, err := c.Part1()
 	assert.NoError(t, err)
-	assert.Equal(t, "10", r)
+	assert.Equal(t, "19", r)
 }
 
 func BenchmarkChallenge_Part1(b *testing.B) {
@@ -68,7 +74,7 @@ func TestChallenge_Part2(t *testing.T) {
 	assert.NoError(t, err)
 	r, err := c.Part2()
 	assert.NoError(t, err)
-	assert.Equal(t, "36", r)
+	assert.Equal(t, "226", r)
 }
 
 func BenchmarkChallenge_Part2(b *testing.B) {
