@@ -63,7 +63,6 @@ type pair uint8
 type rule struct {
 	e1       element
 	e2       element
-	insert   element
 	insertP1 pair
 	insertP2 pair
 }
@@ -71,8 +70,6 @@ type rule struct {
 type Challenge struct {
 	polymerTemplate    []int  // index is pair
 	pairInsertionRules []rule // index is pair
-	pairStringMap      map[pair]string
-	elementStringMap   map[element]string
 
 	maxElement   int
 	firstElement element
@@ -88,16 +85,12 @@ func (c *Challenge) Prepare(r io.Reader) error {
 	elementMap := make(map[byte]element)
 	pairMap := make(map[[2]byte]pair)
 
-	c.pairStringMap = make(map[pair]string)
-	c.elementStringMap = make(map[element]string)
-
 	getElement := func(b byte) (e element) {
 		e, ok := elementMap[b]
 		if !ok {
 			e = element(len(elementMap))
 			elementMap[b] = e
 		}
-		c.elementStringMap[e] = string(b)
 		return
 	}
 	getPair := func(b [2]byte) (p pair) {
@@ -106,7 +99,6 @@ func (c *Challenge) Prepare(r io.Reader) error {
 			p = pair(len(pairMap))
 			pairMap[b] = p
 		}
-		c.pairStringMap[p] = string(b[:])
 		return
 	}
 
@@ -117,7 +109,7 @@ func (c *Challenge) Prepare(r io.Reader) error {
 		} else if scanner.Text() != "" {
 			toks := strings.SplitN(scanner.Text(), " -> ", 2)
 			p := getPair(*(*[2]byte)([]byte(toks[0])))
-			e1, e2, insert := getElement(toks[0][0]), getElement(toks[0][1]), getElement(toks[1][0])
+			e1, e2 := getElement(toks[0][0]), getElement(toks[0][1])
 			if int(p) >= len(c.pairInsertionRules) {
 				tmpPairInsertionRules := make([]rule, p+1)
 				copy(tmpPairInsertionRules, c.pairInsertionRules)
@@ -128,7 +120,6 @@ func (c *Challenge) Prepare(r io.Reader) error {
 				e2:       e2,
 				insertP1: getPair([2]byte{toks[0][0], toks[1][0]}),
 				insertP2: getPair([2]byte{toks[1][0], toks[0][1]}),
-				insert:   insert,
 			}
 		}
 	}
@@ -169,14 +160,14 @@ func (c *Challenge) polymerization(step int) int {
 	}
 	minCount, maxCount := math.MaxInt, 0
 	for _, count := range elementCount {
-		if minCount > count>>1 {
-			minCount = count >> 1
+		if minCount > count {
+			minCount = count
 		}
-		if maxCount < count>>1 {
-			maxCount = count >> 1
+		if maxCount < count {
+			maxCount = count
 		}
 	}
-	return maxCount - minCount
+	return (maxCount >> 1) - (minCount >> 1)
 }
 
 func (c *Challenge) Part1() (string, error) {
