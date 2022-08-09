@@ -17,6 +17,7 @@ import (
 	"github.com/gvassili/adventofcode2021/calendar/day13"
 	"github.com/gvassili/adventofcode2021/calendar/day14"
 	"github.com/gvassili/adventofcode2021/calendar/day15"
+	"github.com/gvassili/adventofcode2021/calendar/day16"
 	"io"
 	"sort"
 )
@@ -37,6 +38,7 @@ var challengeList = []func() Challenge{
 	func() Challenge { return new(day13.Challenge) },
 	func() Challenge { return new(day14.Challenge) },
 	func() Challenge { return new(day15.Challenge) },
+	func() Challenge { return new(day16.Challenge) },
 }
 
 var challengeMap = func() map[int]func() Challenge {
